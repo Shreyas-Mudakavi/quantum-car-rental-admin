@@ -1,0 +1,42 @@
+.location {
+  /* border: 1px solid black; */
+  /* height: 500px; */
+  width: 100%;
+  /* display: flex; */
+  padding: 20px;
+}
+
+.pickup-form {
+  display: flex;
+  /* border: 1px solid red; */
+  /* justify-content: center; */
+}
+.pickup-field {
+  height: 15rem;
+  overflow: auto;
+  /* width: 50%; */
+  /* border: 1px solid black; */
+}
+.dropof-field {
+  height: 15rem;
+  overflow: auto;
+  /* width: 50%; */
+  /* border: 1px solid black;  */
+}
+.d-flex {
+  /* display: flex;
+  justify-content: center; */
+}
+.text-cnt {
+  text-align: center;
+}
+.pd-20 {
+  padding: 20px;
+}
+.add-btn {
+  /* width: 120px; */
+  margin-left: 20px;
+}
+.inp-bar {
+  /* width: 60%; */
+}
