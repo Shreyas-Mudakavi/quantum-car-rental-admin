@@ -12,6 +12,7 @@ import axiosInstance from "../../utils/axiosUtil";
 import { FaEye, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import CustomSkeleton from "../layout/CustomSkeleton";
+import ArrayView from "../listView/ArrayView";
 
 export default function Bookings() {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ export default function Bookings() {
             headers: { Authorization: token },
           }
         );
-        console.log("orders", res.data);
+        // console.log("bookings", res.data);
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {
         dispatch({
@@ -299,6 +300,16 @@ export default function Bookings() {
               )}
             </Card.Footer>
           </Card>
+        )}
+
+        {productList && modalShow ? (
+          <ArrayView
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+            arr={productList}
+          />
+        ) : (
+          <></>
         )}
 
         <ToastContainer />
