@@ -62,7 +62,7 @@ export default function Transactions() {
         );
         setDel(false);
       } catch (error) {
-        toast.error(getError(error), {
+        toast.error("Transaction could not be deleted.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -79,14 +79,13 @@ export default function Transactions() {
             headers: { Authorization: token },
           }
         );
-        // console.log("transaction", res.data);
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {
         dispatch({
           type: "FETCH_FAIL",
           payload: error,
         });
-        toast.error(error, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }

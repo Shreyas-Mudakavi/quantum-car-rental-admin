@@ -50,14 +50,13 @@ export default function Dashboard() {
             headers: { Authorization: token },
           }
         );
-        console.log(data);
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",
-          payload: getError(err),
+          payload: "Server error",
         });
-        toast.error(getError(err), {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }

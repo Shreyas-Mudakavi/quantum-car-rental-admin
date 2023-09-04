@@ -27,11 +27,8 @@ function AddLocation() {
       error: "",
     });
   const [del, setDel] = useState(false);
-  // const [pickUp, setPickUp] = useState([]);
-  // const [dropOf, setDropOf] = useState([]);
   const [pickupLocation, setPickupLocation] = useState("");
   const [dropofLocation, setDropOfLocation] = useState("");
-  // const [add, setAdd] = useState({});
 
   const deleteLocation = async (name, type) => {
     if (
@@ -47,10 +44,9 @@ function AddLocation() {
         );
         setDel(false);
       } catch (error) {
-        console.log(error);
-        // toast.error(getError(error), {
-        //   position: toast.POSITION.BOTTOM_CENTER,
-        // });
+        toast.error("Location could not be deleted.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
       }
     }
   };
@@ -69,25 +65,18 @@ function AddLocation() {
       dispatch({
         type: "FETCH_FAIL",
         payload: "Something went wrong!",
-        // payload: getError(error),
       });
-      toast.error("Something went wrong!", {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
-    //  console.log(data);
-    // setPickUp(data.pickupLocations);
-    // setDropOf(data.dropOffLocations);
   };
 
   useEffect(() => {
-    // console.log(dropOf);
-
     fetchData();
   }, [token, del]);
 
   const pickUpSubmit = async () => {
-    //  setPickUp([...pickUp,pickupLocation]);
     if (pickupLocation === "") {
       toast.error("Please enter Pick up location", {
         position: toast.POSITION.BOTTOM_CENTER,
@@ -105,7 +94,9 @@ function AddLocation() {
       setPickupLocation("");
       await fetchData();
     } catch (error) {
-      console.log(error);
+      toast.error("Server error. Pick-up location could not be added.", {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     }
   };
 
@@ -122,13 +113,12 @@ function AddLocation() {
         "/api/admin/add-location?type=dropoff",
         { location }
       );
-      // console.log(data);
-      // setAdd(data);
       setDropOfLocation("");
       await fetchData();
     } catch (error) {
-      console.log(error);
-      // setAdd(false);
+      toast.error("Server error. Drop-off location could not be added.", {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     }
   };
 
@@ -179,7 +169,7 @@ function AddLocation() {
                     ) : (
                       pickupLocations?.map((element, index) => {
                         return (
-                          <tr>
+                          <tr key={index}>
                             <td className="text-cnt">{index + 1}</td>
                             <td className="text-cnt">{element}</td>
                             <td className="text-cnt">
@@ -247,7 +237,7 @@ function AddLocation() {
                     ) : (
                       dropOffLocations?.map((element, index) => {
                         return (
-                          <tr>
+                          <tr key={index}>
                             <td className="text-cnt">{index + 1}</td>
                             <td className="text-cnt">{element}</td>
                             <td className="text-cnt">

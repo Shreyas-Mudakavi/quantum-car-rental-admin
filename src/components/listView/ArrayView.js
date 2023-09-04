@@ -2,8 +2,6 @@ import React from "react";
 import { Modal, Button, Container, Table } from "react-bootstrap";
 
 export default function ArrayView(props) {
-  console.log("props", props);
-
   return (
     <Modal
       {...props}
@@ -25,24 +23,22 @@ export default function ArrayView(props) {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>price</th>
-                <th>speed</th>
-                <th>brand</th>
-                <th>model</th>
-                <th>gps</th>
+                <th>Model</th>
+                <th>Price</th>
+                <th>Speed</th>
+                <th>Brand</th>
+                <th>GPS</th>
               </tr>
             </thead>
             <tbody>
-              
-                  <tr  className="odd">
-                    <td className="text-center">{props?.arr?.name}</td>
-                    <td>{props?.arr?.price}</td>
-                    <td>{props?.arr?.speed}</td>
-                    <td>{props?.arr?.brand}</td>
-                    <td>{props?.arr?.model}</td>
-                    <td>{props?.arr?.gps}</td>
-                  </tr>
-              
+              <tr className="odd">
+                <td className="text-center">{props?.arr?.name}</td>
+                <td>{props?.arr?.model}</td>
+                <td>{"$" + props?.arr?.price + " /Day"}</td>
+                <td>{props?.arr?.speed}</td>
+                <td>{props?.arr?.brand}</td>
+                <td>{props?.arr?.gps}</td>
+              </tr>
             </tbody>
           </Table>
         </Container>

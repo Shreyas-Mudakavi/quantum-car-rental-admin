@@ -4,7 +4,7 @@ import { getError } from "./error";
 export const uploadImage = async (file, token, percentHandler) => {
   try {
     const bodyFormData = new FormData();
-    
+
     bodyFormData.append("image", file);
     const options = {
       onUploadProgress: (progressEvent) => {
@@ -18,14 +18,12 @@ export const uploadImage = async (file, token, percentHandler) => {
         Authorization: token,
       },
     };
-    console.log(bodyFormData)
     const { data } = await axiosInstance.post(
       "/api/admin/image",
       bodyFormData,
       options
     );
     if (data.data.location) {
-      console.log("location", data.data.location);
       return data.data.location;
     }
   } catch (err) {

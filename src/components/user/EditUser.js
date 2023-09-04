@@ -20,7 +20,6 @@ export default function EditUserModel(props) {
     error: "",
   });
 
-  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -31,7 +30,6 @@ export default function EditUserModel(props) {
     setName("");
     setPhone("");
     setAddress("");
-    // setFax("");
     setRole("");
   };
   useEffect(() => {
@@ -42,23 +40,20 @@ export default function EditUserModel(props) {
         const { data } = await axiosInstance.get(`/api/admin/user/${id}`, {
           headers: { Authorization: token },
         });
-        console.log(data);
 
         const user = data.user;
-        // setPassword(user.password);
         setName(user?.name);
         setPhone(user?.phone);
         setAddress(user?.address);
-        // setFax(user.fax);
         setRole(user.role);
 
         dispatch({ type: "FETCH_SUCCESS" });
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",
-          payload: getError(err),
+          payload: "Server error!",
         });
-        toast.error(getError(error), {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -87,7 +82,6 @@ export default function EditUserModel(props) {
         }
       );
 
-      // console.log("user update data", data);
       if (data.user) {
         toast.success("User Updated Succesfully.  Redirecting...", {
           position: toast.POSITION.BOTTOM_CENTER,
@@ -104,7 +98,7 @@ export default function EditUserModel(props) {
       }
     } catch (err) {
       dispatch({ type: "UPDATE_FAIL" });
-      toast.error(getError(err), {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }

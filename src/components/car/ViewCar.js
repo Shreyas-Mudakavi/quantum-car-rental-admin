@@ -6,11 +6,11 @@ import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import MessageBox from "../layout/MessageBox";
-import EditProductModel from "./EditCar.js";
 import axiosInstance from "../../utils/axiosUtil";
 import { FaEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
+import EditCarModel from "./EditCar";
 
 const ViewCar = () => {
   const { state } = useContext(Store);
@@ -40,7 +40,7 @@ const ViewCar = () => {
         type: "FETCH_FAIL",
         payload: err,
       });
-      toast.error(err, {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
@@ -186,22 +186,12 @@ const ViewCar = () => {
                 {/* add review */}
               </Card.Body>
             </Card>
-            <EditProductModel
+            <EditCarModel
               show={modalShow}
               fetchData={fetchData}
               onHide={() => setModalShow(false)}
             />
-            {/*arrModalShow ? (
-              <QuantityArray
-                show={arrModalShow}
-                onHide={() => setArrModalShow(false)}
-                arr={product.subProducts}
-                column={{"Quantity Type": "qname","Amount": "amount"}}
-                title="Price List"
-              />
-            ) : (
-              <></>
-            )*/}
+
             {!modalShow && <ToastContainer />}
           </>
         )}

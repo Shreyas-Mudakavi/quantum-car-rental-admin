@@ -20,7 +20,6 @@ import { motion } from "framer-motion";
 import CustomSkeleton from "../layout/CustomSkeleton";
 
 export default function Users() {
-  console.log("pankaj");
   const navigate = useNavigate();
   const { state } = useContext(Store);
   const { token } = state;
@@ -52,7 +51,7 @@ export default function Users() {
         });
         setDel(false);
       } catch (error) {
-        toast.error(getError(error), {
+        toast.error("User could not be deleted.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -60,7 +59,6 @@ export default function Users() {
   };
 
   useEffect(() => {
-    console.log("does it call");
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
@@ -70,14 +68,13 @@ export default function Users() {
             headers: { Authorization: token },
           }
         );
-        console.log(res.data);
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {
         dispatch({
           type: "FETCH_FAIL",
-          payload: getError(error),
+          payload: "Server error!",
         });
-        toast.error(getError(error), {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }

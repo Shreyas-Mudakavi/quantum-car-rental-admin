@@ -30,7 +30,6 @@ const ViewQuery = () => {
         const { data } = await axiosInstance.get(`/api/admin/get-query/${id}`, {
           headers: { Authorization: token },
         });
-        // console.log("user:", data);
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
@@ -38,7 +37,7 @@ const ViewQuery = () => {
           type: "FETCH_FAIL",
           payload: err,
         });
-        toast.error(err, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../../Store";
-// import { getError } from "../../utils/error";
 import { uploadImage } from "../../utils/uploadImage";
 import { toast, ToastContainer } from "react-toastify";
 import {
@@ -72,7 +71,6 @@ export default function AddCar() {
       }
     }
     try {
-      console.log(e.target.files);
       if (e.target.files[0]) {
         const location = await uploadImage(
           e.target.files[0],
@@ -89,7 +87,7 @@ export default function AddCar() {
         }, 1000);
       }
     } catch (error) {
-      toast.error(error, {
+      toast.error("File could not be uploaded.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
@@ -165,7 +163,7 @@ export default function AddCar() {
       }
     } catch (err) {
       setLoadingUpdate(false);
-      toast.error(err, {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }

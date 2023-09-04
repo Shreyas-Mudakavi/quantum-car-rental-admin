@@ -31,7 +31,6 @@ export default function UpdateProfileModel(props) {
           }
         );
 
-        console.log(data);
         const user = data.user;
 
         setName(user?.name);
@@ -44,7 +43,7 @@ export default function UpdateProfileModel(props) {
           type: "FETCH_FAIL",
           payload: err,
         });
-        toast.error(error, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -60,7 +59,6 @@ export default function UpdateProfileModel(props) {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // // console.log("ok");
     try {
       dispatch({ type: "UPDATE_REQUEST" });
 
@@ -77,7 +75,6 @@ export default function UpdateProfileModel(props) {
           },
         }
       );
-      // // console.log("data", data);
       if (data.user) {
         toast.success("User Updated Successfully.", {
           position: toast.POSITION.BOTTOM_CENTER,
@@ -99,7 +96,7 @@ export default function UpdateProfileModel(props) {
       }
     } catch (err) {
       dispatch({ type: "UPDATE_FAIL" });
-      toast.error(err, {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }

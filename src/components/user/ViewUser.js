@@ -31,15 +31,14 @@ const ViewUser = () => {
         const { data } = await axiosInstance.get(`/api/admin/user/${id}`, {
           headers: { Authorization: token },
         });
-        // console.log("user:", data);
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",
-          payload: getError(err),
+          payload: "Server error!",
         });
-        toast.error(getError(err), {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -163,7 +162,8 @@ const ViewUser = () => {
               show={modalShow}
               onHide={() => setModalShow(false)}
             />
-            <ToastContainer />
+
+            {!modalShow && <ToastContainer />}
           </>
         )}
       </Container>

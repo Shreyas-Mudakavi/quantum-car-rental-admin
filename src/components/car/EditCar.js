@@ -26,7 +26,7 @@ function getAllSubCategory(subCategories, categoryId) {
   return subCategoryList;
 }
 
-export default function EditProductModel(props) {
+export default function EditCarModel(props) {
   const navigate = useNavigate();
   const { state } = useContext(Store);
   const { token } = state;
@@ -42,7 +42,6 @@ export default function EditProductModel(props) {
     price: "",
     details: "",
     noOfSeat: "",
-    // image : "",
     model: "",
     speed: "",
     gps: "",
@@ -86,7 +85,7 @@ export default function EditProductModel(props) {
         }, 1000);
       }
     } catch (error) {
-      toast.error(error, {
+      toast.error("File could not be uploaded.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
@@ -119,7 +118,7 @@ export default function EditProductModel(props) {
         type: "FETCH_FAIL",
         payload: getError(err),
       });
-      toast.error(getError(err), {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
@@ -168,7 +167,6 @@ export default function EditProductModel(props) {
         brand,
         image,
       });
-      console.log("updated-car", data);
       // carInitialize(data);
 
       if (data.car) {
@@ -189,7 +187,7 @@ export default function EditProductModel(props) {
       }
     } catch (err) {
       dispatch({ type: "UPDATE_FAIL" });
-      toast.error(getError(err), {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }

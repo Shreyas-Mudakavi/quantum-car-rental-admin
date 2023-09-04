@@ -54,7 +54,7 @@ export default function Queries() {
         );
         setDel(false);
       } catch (error) {
-        toast.error(error, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -73,12 +73,11 @@ export default function Queries() {
         );
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {
-        console.log(error);
         dispatch({
           type: "FETCH_FAIL",
           payload: error,
         });
-        toast.error(error, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }

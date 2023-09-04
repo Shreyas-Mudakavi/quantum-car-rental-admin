@@ -1,22 +1,10 @@
-import React, { useEffect, useReducer, useContext, useState } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import { Store } from "../../Store";
 import { getError } from "../../utils/error";
-// import { viewOrderReducer as reducer } from "../../reducers/order";
-// import { viewCarReducer as reducer } from "../../reducers/carReducer";
 import { viewBookingReducer as reducer } from "../../reducers/bookingReducer";
-
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import {
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Table,
-  Button,
-  Spinner,
-} from "react-bootstrap";
+import { Card, Col, Container, Row, Table, Button } from "react-bootstrap";
 import MessageBox from "../layout/MessageBox";
 import axiosInstance from "../../utils/axiosUtil";
 import Skeleton from "react-loading-skeleton";
@@ -30,9 +18,6 @@ const ViewBooking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState(null);
-  const [modalShow, setModalShow] = useState(false);
-  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [{ loading, error, booking }, dispatch] = useReducer(reducer, {
     loading: true,
     error: "",
@@ -49,8 +34,6 @@ const ViewBooking = () => {
             headers: { Authorization: token },
           }
         );
-        console.log("view booking ", data);
-        // setStatus(data.booking.status);
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
@@ -64,44 +47,6 @@ const ViewBooking = () => {
     };
     fetchData();
   }, [id]);
-
-  // const submitHandler = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const { data } = await axiosInstance.put(
-  //       `/api/admin/order/${id}/update/status`,
-  //       {
-  //         status,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-
-  //     // console.log("category add data", data);
-  //     if (data.order) {
-  //       toast.success("Order Status Updated Succesfully", {
-  //         position: toast.POSITION.BOTTOM_CENTER,
-  //       });
-  //       setTimeout(() => {
-  //         setLoadingUpdate(false);
-  //       }, 3000);
-  //     } else {
-  //       toast.error(data.error.message, {
-  //         position: toast.POSITION.BOTTOM_CENTER,
-  //       });
-  //       setLoadingUpdate(false);
-  //     }
-  //   } catch (err) {
-  //     setLoadingUpdate(false);
-  //     toast.error(getError(err), {
-  //       position: toast.POSITION.BOTTOM_CENTER,
-  //     });
-  //   }
-  // };
 
   const getDateTime = (dt) => {
     const dT = dt.split(".")[0].split("T");
@@ -125,27 +70,21 @@ const ViewBooking = () => {
                 <Card.Title>
                   {loading ? <Skeleton /> : "Booking "} Details
                 </Card.Title>
-
-                {/* <div className="card-tools">
-                <FaEdit style={{ color: "blue" }}
-                  onClick={() => setModalShow(true)}
-                />
-              </div> */}
               </Card.Header>
               <Card.Body>
                 <Row>
                   <Col md={4}>
                     <p className="mb-0">
-                      <strong>user</strong>
+                      <strong>User Name</strong>
                     </p>
-                    <p>{loading ? <Skeleton /> : booking.user.name}</p>
+                    <p>{loading ? <Skeleton /> : booking?.user?.name}</p>
                   </Col>
                   <Col md={4}>
                     <p className="mb-0">
                       <strong>startDate</strong>
                     </p>
                     <p>
-                      {loading ? <Skeleton /> : getDateTime(booking.startDate)}
+                      {loading ? <Skeleton /> : getDateTime(booking?.startDate)}
                     </p>
                   </Col>
                   <Col md={4}>
@@ -153,52 +92,21 @@ const ViewBooking = () => {
                       <strong>endDate</strong>
                     </p>
                     <p>
-                      {loading ? <Skeleton /> : getDateTime(booking.endDate)}
+                      {loading ? <Skeleton /> : getDateTime(booking?.endDate)}
                     </p>
                   </Col>
-                  {/*  <Col md={4}>
-                    <p className="mb-0">
-                      <strong>Status</strong>
-                    </p>
-                    {loading ? (
-                      <Skeleton />
-                    ) : (
-                      <Form onSubmit={submitHandler}>
-                        <Row>
-                          <Col>
-                            <Form.Group controlId="status">
-                              <Form.Select
-                                value={status}
-                                onChange={(e) => {
-                                  setStatus(e.target.value);
-                                }}
-                                aria-label="Default select example"
-                              >
-                                <option value="pending">Pending</option>
-                                <option value="paid">Paid</option>
-                                <option value="delivered">Delivered</option>
-                              </Form.Select>
-                            </Form.Group>
-                          </Col>
-                          <Col>
-                            <Button type="submit">
-                              {loadingUpdate ? (
-                                <Spinner animation="border" size="sm" />
-                              ) : (
-                                "Update"
-                              )}
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Form>
-                    )}
-                              
-                              </Col>*/}
+
                   <Col md={4}>
                     <p className="mb-0">
                       <strong>Amount</strong>
                     </p>
-                    <p>{loading ? <Skeleton /> : booking?.totalPrice}</p>
+                    <p>
+                      {loading ? (
+                        <Skeleton />
+                      ) : (
+                        "$" + booking?.totalPrice?.toFixed(2)
+                      )}
+                    </p>
                   </Col>
 
                   <Col md={4}>
@@ -298,10 +206,7 @@ const ViewBooking = () => {
                 )}
               </Card.Body>
             </Card>
-            {/* <EditorderModel
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          /> */}
+
             <ToastContainer />
           </>
         )}

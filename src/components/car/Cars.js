@@ -45,7 +45,7 @@ export default function Cars() {
         const res = await axiosInstance.delete(`/api/car/delete-car/${id}`);
         setDel(false);
       } catch (error) {
-        toast.error(getError(error), {
+        toast.error("There was an error deleting this car.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -59,16 +59,15 @@ export default function Cars() {
         const res = await axiosInstance.get(
           `/api/admin/getAllCars/?keyword=${query}&resultPerPage=${resultPerPage}&currentPage=${curPage}`
         );
-        console.log("res", curPage, res.data);
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         dispatch({
           type: "FETCH_FAIL",
           payload: error.message,
           // payload: getError(error),
         });
-        toast.error(error.message, {
+        toast.error("Server error. Please try again later.", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
       }
@@ -163,7 +162,7 @@ export default function Cars() {
                           />
                         </td>
                         <td>{car?.name}</td>
-                        <td>{car?.price}</td>
+                        <td>{"$" + car?.price + " / Day"}</td>
                         <td>{car?.speed}</td>
                         <td>{car?.brand}</td>
                         <td>{car?.noOfSeat}</td>

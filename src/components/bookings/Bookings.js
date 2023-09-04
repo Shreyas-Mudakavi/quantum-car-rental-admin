@@ -40,7 +40,6 @@ export default function Bookings() {
   });
 
   const showModelHandler = (ls) => {
-    console.log("product_list", ls);
     setProductList(ls);
     setModalShow(true);
   };
@@ -59,10 +58,9 @@ export default function Bookings() {
         );
         setDel(false);
       } catch (error) {
-        console.log(error);
-        // toast.error(getError(error), {
-        //   position: toast.POSITION.BOTTOM_CENTER,
-        // });
+        toast.error("There was an error deleting this booking.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
       }
     }
   };

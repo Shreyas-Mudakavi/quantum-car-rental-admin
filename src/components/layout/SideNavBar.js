@@ -51,11 +51,11 @@ const linkList = [
 const active_text = {
   Dashboard: "dashboard",
   Users: "user",
-  Bookings: "bookings",
-  Cars: "cars",
-  Transactions: "transactions",
+  Bookings: "booking",
+  Cars: "car",
+  Transactions: "transaction",
   Location: "locations",
-  Queries: "queries",
+  Queries: "query",
 };
 
 export default function SideNavbar({ isExpanded }) {

@@ -23,7 +23,6 @@ const viewCarReducer = (state, action) => {
     case "FETCH_REQUEST":
       return { ...state, loading: true };
     case "FETCH_SUCCESS":
-      console.log("hi", action.payload.car);
       return { ...state, loading: false, car: action.payload.car };
     case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };

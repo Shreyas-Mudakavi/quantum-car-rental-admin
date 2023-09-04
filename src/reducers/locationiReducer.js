@@ -7,8 +7,6 @@ const locationReducer = (state, action) => {
         ...state,
         pickupLocations: action.pickupLocations,
         dropOffLocations: action.dropOffLocations,
-        //   userCount: action.payload.userCount,
-        //   filteredUserCount: action.payload.filteredUserCount,
         loading: false,
       };
     case "FETCH_FAIL":

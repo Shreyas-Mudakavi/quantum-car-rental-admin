@@ -32,7 +32,6 @@ const ViewProfile = () => {
           headers: { Authorization: token },
         }
       );
-      // console.log(data);
 
       dispatch({ type: "FETCH_SUCCESS", payload: data });
     } catch (err) {
@@ -40,7 +39,7 @@ const ViewProfile = () => {
         type: "FETCH_FAIL",
         payload: err,
       });
-      toast.error(err, {
+      toast.error("Server error. Please try again later.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
