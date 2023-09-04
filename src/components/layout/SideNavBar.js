@@ -92,10 +92,10 @@ export default function SideNavbar({ isExpanded }) {
             {/* <img src="/LogoWhite.png" alt="" width={"50px"} height="auto" /> */}
             <span
               onClick={() => navigate("/admin/dashboard")}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", fontSize: "0.98rem" }}
               className="brand-text ms-2 font-weight-light"
             >
-              Car rental
+              Palmerston North Car Rentals
             </span>
           </div>
 

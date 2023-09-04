@@ -162,7 +162,7 @@ export default function Dashboard() {
                     <div className="inner">
                       <h3>
                         {summary?.payments && summary?.payments[0]
-                          ? summary?.payments[0].total
+                          ? summary?.payments[0].total?.toFixed(2)
                           : 0}
                       </h3>
                       <p>Total Payment</p>
