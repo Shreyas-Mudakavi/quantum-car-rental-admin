@@ -147,7 +147,7 @@ export default function AddCar() {
       );
 
       if (data.car) {
-        toast.success("car Added Succesfully", {
+        toast.success("Car Added Succesfully", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
         resetForm();

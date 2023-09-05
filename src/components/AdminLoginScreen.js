@@ -62,7 +62,7 @@ export default function AdminLoginScreen() {
     <Container fluid className="p-0 vh-100 f-center flex-column login-page">
       <div className="login-logo">
         <Link to="/" className="text-center">
-          <b>Car rental Admin</b>
+          <b>Palmerston North Car Rentals - Admin</b>
         </Link>
       </div>
 
@@ -103,7 +103,11 @@ export default function AdminLoginScreen() {
                 </Form.Group>
               </Col>
               <Col sm={5}>
-                <Button type="submit" className="float-sm-end">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="float-sm-end"
+                >
                   {loading ? (
                     <Spinner animation="border" size="sm" />
                   ) : (

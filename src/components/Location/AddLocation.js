@@ -54,7 +54,9 @@ function AddLocation() {
   const fetchData = async () => {
     dispatch({ type: "FETCH_REQUEST" });
     try {
-      const { data } = await axiosInstance.get("/api/admin/all-location");
+      const { data } = await axiosInstance.get("/api/admin/all-location", {
+        headers: { Authorization: token },
+      });
 
       dispatch({
         type: "FETCH_SUCCESS",
@@ -88,7 +90,10 @@ function AddLocation() {
       const location = pickupLocation;
       const { data } = await axiosInstance.post(
         "/api/admin/add-location?type=pickup",
-        { location }
+        { location },
+        {
+          headers: { Authorization: token },
+        }
       );
       // setAdd(data);
       setPickupLocation("");
@@ -111,7 +116,10 @@ function AddLocation() {
       const location = dropofLocation;
       const { data } = await axiosInstance.post(
         "/api/admin/add-location?type=dropoff",
-        { location }
+        { location },
+        {
+          headers: { Authorization: token },
+        }
       );
       setDropOfLocation("");
       await fetchData();

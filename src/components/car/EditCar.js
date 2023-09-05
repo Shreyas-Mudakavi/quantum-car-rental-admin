@@ -108,7 +108,9 @@ export default function EditCarModel(props) {
   const fetchData = async () => {
     try {
       dispatch({ type: "FETCH_REQUEST" });
-      const { data } = await axiosInstance.get(`/api/car/find-car/${id}`);
+      const { data } = await axiosInstance.get(`/api/admin/findCar/${id}`, {
+        headers: { Authorization: token },
+      });
       carInitialize(data);
       setProductImage(data.car?.image);
 
@@ -155,18 +157,24 @@ export default function EditCarModel(props) {
     try {
       dispatch({ type: "UPDATE_REQUEST" });
 
-      const { data } = await axiosInstance.patch(`/api/car/update-car/${id}`, {
-        name,
-        price,
-        details,
-        speed,
-        gps,
-        automatic,
-        noOfSeat,
-        model,
-        brand,
-        image,
-      });
+      const { data } = await axiosInstance.put(
+        `/api/admin/updateCar/${id}`,
+        {
+          name,
+          price,
+          details,
+          speed,
+          gps,
+          automatic,
+          noOfSeat,
+          model,
+          brand,
+          image,
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
       // carInitialize(data);
 
       if (data.car) {

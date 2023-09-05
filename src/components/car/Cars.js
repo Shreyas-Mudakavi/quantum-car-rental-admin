@@ -42,7 +42,9 @@ export default function Cars() {
     if (window.confirm("Are you sure you want to delete this car?") === true) {
       try {
         setDel(true);
-        const res = await axiosInstance.delete(`/api/car/delete-car/${id}`);
+        const res = await axiosInstance.delete(`/api/car/delete-car/${id}`, {
+          headers: { Authorization: token },
+        });
         setDel(false);
       } catch (error) {
         toast.error("There was an error deleting this car.", {
@@ -57,7 +59,10 @@ export default function Cars() {
       dispatch({ type: "FETCH_REQUEST" });
       try {
         const res = await axiosInstance.get(
-          `/api/admin/getAllCars/?keyword=${query}&resultPerPage=${resultPerPage}&currentPage=${curPage}`
+          `/api/admin/getAllCars/?keyword=${query}&resultPerPage=${resultPerPage}&currentPage=${curPage}`,
+          {
+            headers: { Authorization: token },
+          }
         );
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (error) {

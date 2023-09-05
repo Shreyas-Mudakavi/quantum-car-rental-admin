@@ -32,7 +32,9 @@ const ViewCar = () => {
     try {
       dispatch({ type: "FETCH_REQUEST" });
 
-      const { data } = await axiosInstance.get(`/api/car/find-car/${id}`);
+      const { data } = await axiosInstance.get(`/api/admin/findCar/${id}`, {
+        headers: { Authorization: token },
+      });
 
       dispatch({ type: "FETCH_SUCCESS", payload: data });
     } catch (err) {
