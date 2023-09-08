@@ -182,7 +182,7 @@ export default function Queries() {
             </Card.Body>
             <Card.Footer>
               <div className="float-start d-flex align-items-center mt-3">
-                <p className="p-bold m-0 me-3">Row No.</p>
+                <p className="p-bold m-0 me-3">Number of rows displayed: </p>
                 <Form.Group controlId="resultPerPage">
                   <Form.Select
                     value={resultPerPage}

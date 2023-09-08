@@ -235,7 +235,7 @@ function AddLocation() {
                   <thead>
                     <tr>
                       <th className="text-cnt">S.No</th>
-                      <th className="text-cnt">Dropof Location</th>
+                      <th className="text-cnt">Dropoff Location</th>
                       <th className="text-cnt">Actions</th>
                     </tr>
                   </thead>

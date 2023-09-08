@@ -34,7 +34,7 @@ export default function UpdateProfileModel(props) {
         const user = data.user;
 
         setName(user?.name);
-        setAddress(user?.fax);
+        setAddress(user?.address);
         setPhone(user?.phone);
 
         dispatch({ type: "FETCH_SUCCESS" });
