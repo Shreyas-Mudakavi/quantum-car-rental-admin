@@ -167,7 +167,7 @@ export default function Cars() {
                           />
                         </td>
                         <td>{car?.name}</td>
-                        <td>{"$" + car?.price + " / Day"}</td>
+                        <td>{"$" + car?.price + "/day"}</td>
                         <td>{car?.speed}</td>
                         <td>{car?.brand}</td>
                         <td>{car?.noOfSeat}</td>
