@@ -49,12 +49,13 @@ export default function AdminLoginScreen() {
         toast.error(data, { position: toast.POSITION.BOTTOM_CENTER });
       }
     } catch (err) {
-      // console.log("err", err.response);
       dispatch({
         type: "FETCH_FAIL",
-        payload: getError(err),
+        payload: getError(err.response.data),
       });
-      toast.error(getError(err), { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error(getError(err.response.data), {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     }
   };
 

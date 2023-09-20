@@ -157,7 +157,7 @@ export default function Cars() {
                         <td>
                           <img
                             className="td-img"
-                            src={car?.image}
+                            src={car?.images[0]}
                             alt=""
                             style={{
                               width: "50px",

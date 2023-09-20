@@ -4,7 +4,7 @@ import { getError } from "../../utils/error";
 import { viewCarReducer as reducer } from "../../reducers/carReducer";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import MessageBox from "../layout/MessageBox";
 import axiosInstance from "../../utils/axiosUtil";
 import { FaEdit } from "react-icons/fa";
@@ -90,7 +90,7 @@ const ViewCar = () => {
                       <Skeleton height={200} />
                     ) : (
                       <img
-                        src={car.image}
+                        src={car?.images[0]}
                         alt=""
                         className="img-fluid"
                         width={"200px"}
@@ -98,6 +98,7 @@ const ViewCar = () => {
                       />
                     )}
                   </Col>
+
                   <Col md={8}>
                     <Row>
                       <Col md={4}>
@@ -133,7 +134,7 @@ const ViewCar = () => {
                           <strong>Price</strong>
                         </p>
                         <p>
-                          {loading ? <Skeleton /> : "$" + car?.price + " / Day"}
+                          {loading ? <Skeleton /> : "$" + car?.price + "/day"}
                         </p>
                       </Col>
 
@@ -153,7 +154,7 @@ const ViewCar = () => {
 
                       <Col md={4}>
                         <p className="mb-0">
-                          <strong>No of seat</strong>
+                          <strong>No of seat(s)</strong>
                         </p>
                         <p>{loading ? <Skeleton /> : car?.noOfSeat}</p>
                       </Col>
@@ -182,6 +183,80 @@ const ViewCar = () => {
                         </p>
                       </Col>
                     </Row>
+                  </Col>
+
+                  <Col className="my-3">
+                    {loading ? (
+                      <Skeleton height={200} />
+                    ) : (
+                      car?.features?.length > 0 && (
+                        <>
+                          <p>
+                            <strong>Added features</strong>
+                          </p>
+                          <Table responsive striped bordered hover>
+                            <thead>
+                              <tr>
+                                <th>S.No</th>
+                                <th>Feature Name</th>
+                                <th>Feature Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {car?.features &&
+                                car?.features?.map((feature, i) => (
+                                  <tr key={i} className="odd">
+                                    <td className="text-center">{i + 1}</td>
+                                    <td className="text-center">
+                                      {feature?.name}
+                                    </td>
+                                    <td className="">
+                                      <>{feature?.description}</>
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </Table>
+                        </>
+                      )
+                    )}
+                  </Col>
+
+                  <Col className="my-3">
+                    {loading ? (
+                      <Skeleton height={200} />
+                    ) : (
+                      car?.benefits?.length > 0 && (
+                        <>
+                          <p>
+                            <strong>Added benefits</strong>
+                          </p>
+                          <Table responsive striped bordered hover>
+                            <thead>
+                              <tr>
+                                <th>S.No</th>
+                                <th>Benefit Name</th>
+                                <th>Benefit Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {car?.benefits &&
+                                car?.benefits?.map((benefit, i) => (
+                                  <tr key={i} className="odd">
+                                    <td className="text-center">{i + 1}</td>
+                                    <td className="text-center">
+                                      {benefit?.name}
+                                    </td>
+                                    <td className="">
+                                      <>{benefit?.description}</>
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </Table>
+                        </>
+                      )
+                    )}
                   </Col>
                 </Row>
 

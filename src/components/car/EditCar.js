@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useContext, useState } from "react";
 import { Store } from "../../Store";
 import { getError } from "../../utils/error";
 import { editReducer as reducer } from "../../reducers/commonReducer";
-import { uploadImage } from "../../utils/uploadImage";
+import { uploadImage, uploadMultiImage } from "../../utils/uploadImage";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import {
@@ -13,6 +13,7 @@ import {
   ProgressBar,
   Row,
   Col,
+  Table,
 } from "react-bootstrap";
 import LoadingBox from "../layout/LoadingBox";
 import axiosInstance from "../../utils/axiosUtil";
@@ -36,6 +37,7 @@ export default function EditCarModel(props) {
     loading: true,
     error: "",
   });
+  const [preview, setPreview] = useState("");
   const [product_images, setProductImage] = useState(null);
   const [values, setValues] = useState({
     name: "",
@@ -48,6 +50,78 @@ export default function EditCarModel(props) {
     automatic: "",
     brand: "",
   });
+  const [featureVariant, setFeatureVariant] = useState([
+    // {
+    //   name: "",
+    //   description: "",
+    // },
+  ]);
+  const [benefitVariant, setBenefitVariant] = useState([
+    {
+      name: "",
+      description: "",
+    },
+  ]);
+  const [editCarValues, setEditCarValues] = useState({
+    featureName: "",
+    featureDesc: "",
+    benefitsName: "",
+    benefitsDesc: "",
+  });
+
+  const handleAddFeatures = () => {
+    if (
+      editCarValues?.featureName?.length <= 0 ||
+      editCarValues?.featureDesc?.length <= 0
+    ) {
+      toast.error("Please add feature name and description!", {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
+
+      return;
+    }
+    setFeatureVariant([
+      ...featureVariant,
+      {
+        name: editCarValues?.featureName,
+        description: editCarValues?.featureDesc,
+      },
+    ]);
+
+    setEditCarValues({
+      featureName: "",
+      featureDesc: "",
+      benefitsName: editCarValues?.benefitsName,
+      benefitsDesc: editCarValues?.benefitsDesc,
+    });
+  };
+
+  const handleAddBenefits = () => {
+    if (
+      editCarValues?.benefitsName?.length <= 0 ||
+      editCarValues?.benefitsDesc?.length <= 0
+    ) {
+      toast.error("Please add benefit name and description!", {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
+
+      return;
+    }
+    setBenefitVariant([
+      ...benefitVariant,
+      {
+        name: editCarValues?.benefitsName,
+        description: editCarValues?.benefitsDesc,
+      },
+    ]);
+
+    setEditCarValues({
+      featureName: editCarValues?.featureName,
+      featureDesc: editCarValues?.featureDesc,
+      benefitsName: "",
+      benefitsDesc: "",
+    });
+  };
 
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const uploadPercentageHandler = (per) => {
@@ -61,7 +135,7 @@ export default function EditCarModel(props) {
     }
     for (let k in e.target.files) {
       if (e.target.files[k].size > 5000000) {
-        toast.warning("Image size is too large. (max size 5MB)", {
+        toast.warning("One of the image size is too large. (max size 5MB)", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
         setProductImage(null);
@@ -70,8 +144,9 @@ export default function EditCarModel(props) {
     }
     try {
       if (e.target.files[0]) {
-        const location = await uploadImage(
-          e.target.files[0],
+        const location = await uploadMultiImage(
+          e.target.files,
+          // e.target.files[0],
           token,
           uploadPercentageHandler
         );
@@ -79,7 +154,7 @@ export default function EditCarModel(props) {
           throw location.error;
         }
 
-        setProductImage(location);
+        setProductImage([...location]);
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
@@ -102,6 +177,8 @@ export default function EditCarModel(props) {
       gps: data?.car?.gps,
       automatic: data?.car?.automatic,
       brand: data?.car?.brand,
+      features: data?.car?.features,
+      benefits: data?.car?.benefits,
     });
   };
 
@@ -112,7 +189,10 @@ export default function EditCarModel(props) {
         headers: { Authorization: token },
       });
       carInitialize(data);
-      setProductImage(data.car?.image);
+      setProductImage(data.car?.images[0]);
+      setPreview(data.car?.images[0]);
+      setFeatureVariant(data.car?.features);
+      setBenefitVariant(data.car?.benefits);
 
       dispatch({ type: "FETCH_SUCCESS" });
     } catch (err) {
@@ -152,7 +232,7 @@ export default function EditCarModel(props) {
       brand,
     } = values;
 
-    const image = product_images;
+    const images = product_images;
 
     try {
       dispatch({ type: "UPDATE_REQUEST" });
@@ -169,7 +249,9 @@ export default function EditCarModel(props) {
           noOfSeat,
           model,
           brand,
-          image,
+          images,
+          features: featureVariant,
+          benefits: benefitVariant,
         },
         {
           headers: { Authorization: token },
@@ -195,11 +277,16 @@ export default function EditCarModel(props) {
       }
     } catch (err) {
       dispatch({ type: "UPDATE_FAIL" });
-      toast.error("Server error. Please try again later.", {
+      toast.error("An error occured while updating the car.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
   };
+
+  const handleEditCarValuesChange = (e) => {
+    setEditCarValues({ ...editCarValues, [e.target.name]: e.target.value });
+  };
+
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -215,6 +302,13 @@ export default function EditCarModel(props) {
         <Modal.Title id="contained-modal-title-vcenter">Edit Car</Modal.Title>
       </Modal.Header>
       <Form onSubmit={submitHandler} style={{ padding: "10px" }}>
+        <img
+          src={preview}
+          alt=""
+          width={""}
+          height={"200px"}
+          className="mb-3"
+        />
         <Row>
           <Col>
             <Form.Group className="mb-3">
@@ -327,15 +421,178 @@ export default function EditCarModel(props) {
           </Col>
         </Row>
 
+        <h4>Features</h4>
+        <Row className="align-items-center">
+          <Col lg={3} md={3}>
+            <Form.Group className="mb-3" controlId="newFeature">
+              <Form.Label>Feature Name</Form.Label>
+              <Form.Control
+                value={editCarValues?.featureName}
+                type="text"
+                name="featureName"
+                onChange={handleEditCarValuesChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={5} md={5}>
+            <Form.Group className="mb-3" controlId="newFeature">
+              <Form.Label>Feature Description</Form.Label>
+              <Form.Control
+                value={editCarValues?.featureDesc}
+                type="text"
+                name="featureDesc"
+                onChange={handleEditCarValuesChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={4}>
+            <Button className="mt-4" onClick={handleAddFeatures}>
+              Add new feature
+            </Button>
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          {featureVariant?.length > 0 && (
+            <div className="table-responsive">
+              <Table responsive striped bordered hover id="example1">
+                <thead>
+                  <tr>
+                    <th>Sr No.</th>
+                    <th>Feature Name</th>
+                    <th>Feature Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {featureVariant.map((feature, i) => (
+                    <tr key={featureVariant.findIndex((f) => f === feature)}>
+                      <td className="text-center">{i + 1}</td>
+                      <td>{feature?.name}</td>
+                      <td>{feature?.description}</td>
+                      <td>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const index = featureVariant.findIndex(
+                              (f) => f === feature
+                            );
+                            // console.log({ index });
+                            if (index > -1) {
+                              // only splice array when item is found
+
+                              setFeatureVariant([
+                                ...featureVariant.slice(0, index),
+
+                                // part of the array after the given item
+                                ...featureVariant.slice(index + 1),
+                              ]);
+                            }
+                          }}
+                          type="danger"
+                          className="btn btn-danger btn-block"
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          )}
+        </Row>
+
+        <h4>Benefits</h4>
+        <Row className="align-items-center">
+          <Col lg={3} md={3}>
+            <Form.Group className="mb-3" controlId="newFeature">
+              <Form.Label>Benefit Name</Form.Label>
+              <Form.Control
+                value={editCarValues?.benefitsName}
+                type="text"
+                name="benefitsName"
+                onChange={handleEditCarValuesChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={5} md={5}>
+            <Form.Group className="mb-3" controlId="newFeature">
+              <Form.Label>Benefit Description</Form.Label>
+              <Form.Control
+                value={editCarValues?.benefitsDesc}
+                type="text"
+                name="benefitsDesc"
+                onChange={handleEditCarValuesChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={4}>
+            <Button className="mt-4" onClick={handleAddBenefits}>
+              Add new benefit
+            </Button>
+          </Col>
+        </Row>
         <Row>
-          <Form.Group className="mb-3" controlId="product_image">
-            <Form.Label>Upload Image</Form.Label>
+          {benefitVariant?.length > 0 && (
+            <div className="table-responsive">
+              <Table id="example1" responsive striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Sr No.</th>
+                    <th>Benefit Name</th>
+                    <th>Benefit Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {benefitVariant.map((bene, i) => (
+                    <tr key={benefitVariant.findIndex((f) => f === bene)}>
+                      <td className="text-center">{i + 1}</td>
+                      <td>{bene?.name}</td>
+                      <td>{bene?.description}</td>
+                      <td>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const index = benefitVariant.findIndex(
+                              (f) => f === bene
+                            );
+                            // console.log({ index });
+                            if (index > -1) {
+                              // only splice array when item is found
+
+                              setFeatureVariant([
+                                ...benefitVariant.slice(0, index),
+
+                                // part of the array after the given item
+                                ...benefitVariant.slice(index + 1),
+                              ]);
+                            }
+                          }}
+                          type="danger"
+                          className="btn btn-danger btn-block"
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          )}
+        </Row>
+
+        <Row>
+          <Form.Group className="my-3" controlId="product_image">
+            <Form.Label>Upload Images</Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
               onChange={(e) => {
                 uploadFileHandler(e);
               }}
+              multiple
             />
             {uploadPercentage > 0 && (
               <ProgressBar
