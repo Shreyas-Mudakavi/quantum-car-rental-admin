@@ -154,7 +154,8 @@ export default function EditCarModel(props) {
           throw location.error;
         }
 
-        setProductImage([...location]);
+        setProductImage([...location, ...product_images]);
+        // setProductImage([...location, product_images]);
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
@@ -189,7 +190,7 @@ export default function EditCarModel(props) {
         headers: { Authorization: token },
       });
       carInitialize(data);
-      setProductImage(data.car?.images[0]);
+      setProductImage(data.car?.images);
       setPreview(data.car?.images[0]);
       setFeatureVariant(data.car?.features);
       setBenefitVariant(data.car?.benefits);
@@ -237,7 +238,7 @@ export default function EditCarModel(props) {
     try {
       dispatch({ type: "UPDATE_REQUEST" });
 
-      const { data } = await axiosInstance.put(
+      const { data } = await axiosInstance.patch(
         `/api/admin/updateCar/${id}`,
         {
           name,
