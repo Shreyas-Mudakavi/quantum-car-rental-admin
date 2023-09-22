@@ -238,7 +238,7 @@ export default function EditCarModel(props) {
     try {
       dispatch({ type: "UPDATE_REQUEST" });
 
-      const { data } = await axiosInstance.patch(
+      const { data } = await axiosInstance.put(
         `/api/admin/updateCar/${id}`,
         {
           name,
