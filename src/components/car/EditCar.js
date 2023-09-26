@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useContext, useState } from "react";
 import { Store } from "../../Store";
 import { getError } from "../../utils/error";
 import { editReducer as reducer } from "../../reducers/commonReducer";
+import ImageUploading from "react-images-uploading";
 import { uploadImage, uploadMultiImage } from "../../utils/uploadImage";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -17,15 +18,7 @@ import {
 } from "react-bootstrap";
 import LoadingBox from "../layout/LoadingBox";
 import axiosInstance from "../../utils/axiosUtil";
-
-function getAllSubCategory(subCategories, categoryId) {
-  if (!categoryId) return [];
-
-  const subCategoryList = subCategories.filter((subCat) => {
-    if (subCat.category) return subCat.category === categoryId;
-  });
-  return subCategoryList;
-}
+import ImagePreview from "./ImagePreview";
 
 export default function EditCarModel(props) {
   const navigate = useNavigate();
@@ -38,7 +31,8 @@ export default function EditCarModel(props) {
     error: "",
   });
   const [preview, setPreview] = useState("");
-  const [product_images, setProductImage] = useState(null);
+  const [product_images, setProductImage] = useState([]);
+  const [loadingImg, setLoadingImg] = useState(false);
   const [values, setValues] = useState({
     name: "",
     price: "",
@@ -128,43 +122,114 @@ export default function EditCarModel(props) {
     setUploadPercentage(per);
   };
 
-  const uploadFileHandler = async (e, type) => {
-    if (!e.target.files[0]) {
-      setProductImage(null);
-      return;
-    }
-    for (let k in e.target.files) {
-      if (e.target.files[k].size > 5000000) {
+  // const onChange = (imageList, addUpdateIndex) => {
+  //   // data for submit
+  //   console.log(imageList, addUpdateIndex);
+  //   let files = [];
+  //   for (let k in imageList) {
+  //     // console.log(imageList[k]?.file);
+  //     files.push(imageList[k]?.file);
+  //   }
+  //   console.log(files.filter((file) => file !== undefined));
+  //   setProductImage(imageList);
+  //   // setImages(imageList);
+  // };
+
+  const uploadFileHandler = async (imageList, addUpdateIndex) => {
+    // const uploadFileHandler = async (e, type) => {
+    // console.log(e.target.files);
+    // console.log(imageList, addUpdateIndex);
+    let files = [];
+    for (let k in imageList) {
+      setLoadingImg(true);
+      // console.log(imageList[k]?.file);
+      if (imageList[k]?.file?.size > 5000000) {
         toast.warning("One of the image size is too large. (max size 5MB)", {
           position: toast.POSITION.BOTTOM_CENTER,
         });
-        setProductImage(null);
+        setProductImage([]);
+        setLoadingImg(false);
         return;
       }
+
+      files.push(imageList[k]?.file);
     }
+
+    // console.log(files.filter((file) => file !== undefined));
+
+    // if (!e.target.files[0]) {
+    //   setProductImage(null);
+    //   return;
+    // }
+    // for (let k in e.target.files) {
+    //   if (e.target.files[k].size > 5000000) {
+    //     toast.warning("One of the image size is too large. (max size 5MB)", {
+    //       position: toast.POSITION.BOTTOM_CENTER,
+    //     });
+    //     setProductImage(null);
+    //     return;
+    //   }
+    // }
     try {
-      if (e.target.files[0]) {
+      setLoadingImg(true);
+      if (files.filter((file) => file !== undefined)[0]) {
         const location = await uploadMultiImage(
-          e.target.files,
+          files.filter((file) => file !== undefined),
           // e.target.files[0],
           token,
           uploadPercentageHandler
         );
         if (location.error) {
+          setLoadingImg(false);
           throw location.error;
         }
 
-        setProductImage([...location, ...product_images]);
-        // setProductImage([...location, product_images]);
-        setTimeout(() => {
-          setUploadPercentage(0);
-        }, 1000);
+        if (product_images[addUpdateIndex]) {
+          const updatedImg = product_images.splice(
+            addUpdateIndex,
+            1,
+            location[0]
+          );
+
+          setProductImage(product_images);
+
+          setTimeout(() => {
+            setUploadPercentage(0);
+            setLoadingImg(false);
+          }, 1000);
+          return;
+        } else {
+          setProductImage([...location, ...product_images]);
+          // setProductImage([...location, ...product_images].reverse());
+          // setProductImage([...location, product_images]);
+          setTimeout(() => {
+            setUploadPercentage(0);
+            setLoadingImg(false);
+          }, 1000);
+          return;
+        }
       }
     } catch (error) {
+      setLoadingImg(false);
       toast.error("File could not be uploaded.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
+  };
+
+  const onRemoveSingleImage = (index) => {
+    // console.log(index);
+    // console.log(product_images[index]);
+    const imageToRemove = product_images[index];
+    setProductImage((current) =>
+      current.filter((image) => {
+        return image !== imageToRemove;
+      })
+    );
+  };
+
+  const onRemoveAllImages = () => {
+    setProductImage([]);
   };
 
   const carInitialize = (data) => {
@@ -214,7 +279,7 @@ export default function EditCarModel(props) {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (!product_images) {
+    if (!product_images || product_images?.length <= 0) {
       toast.warning("Please choose a file.", {
         position: toast.POSITION.BOTTOM_CENTER,
       });
@@ -584,7 +649,7 @@ export default function EditCarModel(props) {
           )}
         </Row>
 
-        <Row>
+        {/* <Row>
           <Form.Group className="my-3" controlId="product_image">
             <Form.Label>Upload Images</Form.Label>
             <Form.Control
@@ -603,6 +668,29 @@ export default function EditCarModel(props) {
               />
             )}
           </Form.Group>
+        </Row> */}
+
+        <Row className="my-4">
+          <div className="mx-2">
+            {uploadPercentage > 0 && (
+              <ProgressBar
+                now={uploadPercentage}
+                active
+                label={`${uploadPercentage}%`}
+              />
+            )}
+          </div>
+          <Form.Label>
+            <h4>Edit/Add Images</h4>
+          </Form.Label>
+
+          <ImagePreview
+            product_images={product_images}
+            maxNumber={69}
+            uploadFileHandler={uploadFileHandler}
+            onRemoveAllImages={onRemoveAllImages}
+            onRemoveSingleImage={onRemoveSingleImage}
+          />
         </Row>
 
         <Row>
@@ -627,7 +715,7 @@ export default function EditCarModel(props) {
           <Button
             variant="success"
             type="submit"
-            disabled={loadingUpdate ? true : false}
+            disabled={loadingUpdate || loadingImg ? true : false}
           >
             Submit
           </Button>

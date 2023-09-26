@@ -18,6 +18,7 @@
     "react-google-charts": "^4.0.0",
     "react-icons": "^4.3.1",
     "react-image-crop": "^10.0.9",
+    "react-images-uploading": "^3.1.7",
     "react-loading-skeleton": "^3.2.0",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
