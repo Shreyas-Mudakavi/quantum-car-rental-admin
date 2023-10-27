@@ -36,6 +36,7 @@ export default function AddCar() {
     gps: "Yes",
     automatic: "Automatic",
     brand: "",
+    discount: 0,
   });
   const [addCarValues, setAddCarValues] = useState({
     featureName: "",
@@ -236,6 +237,7 @@ export default function AddCar() {
       noOfSeat,
       price,
       speed,
+      discount,
     } = values;
 
     if (features?.length <= 0) {
@@ -281,6 +283,7 @@ export default function AddCar() {
           brand,
           features,
           benefits,
+          discount,
           product_images,
         },
         {
@@ -445,6 +448,21 @@ export default function AddCar() {
                           onChange={handleChange}
                           type="text"
                           // placeholder="brand"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="6">
+                      <Form.Group className="mb-3">
+                        <Form.Label>Discount (%)</Form.Label>
+                        <Form.Control
+                          name="discount"
+                          value={values?.discount}
+                          required
+                          onChange={handleChange}
+                          type="number"
+                          // placeholder="Honda"
                         />
                       </Form.Group>
                     </Col>

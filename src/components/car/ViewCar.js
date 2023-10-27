@@ -168,6 +168,13 @@ const ViewCar = () => {
 
                       <Col md={4}>
                         <p className="mb-0">
+                          <strong>Discount (%)</strong>
+                        </p>
+                        <p>{loading ? <Skeleton /> : car?.discount}</p>
+                      </Col>
+
+                      <Col md={4}>
+                        <p className="mb-0">
                           <strong>Created At</strong>
                         </p>
                         <p>

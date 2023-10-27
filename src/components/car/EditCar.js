@@ -43,6 +43,7 @@ export default function EditCarModel(props) {
     gps: "",
     automatic: "",
     brand: "",
+    discount: 0,
   });
   const [featureVariant, setFeatureVariant] = useState([
     // {
@@ -243,6 +244,7 @@ export default function EditCarModel(props) {
       gps: data?.car?.gps,
       automatic: data?.car?.automatic,
       brand: data?.car?.brand,
+      discount: data?.car?.discount,
       features: data?.car?.features,
       benefits: data?.car?.benefits,
     });
@@ -296,6 +298,7 @@ export default function EditCarModel(props) {
       noOfSeat,
       model,
       brand,
+      discount,
     } = values;
 
     const images = product_images;
@@ -315,6 +318,7 @@ export default function EditCarModel(props) {
           noOfSeat,
           model,
           brand,
+          discount,
           images,
           features: featureVariant,
           benefits: benefitVariant,
@@ -482,6 +486,20 @@ export default function EditCarModel(props) {
                 onChange={handleChange}
                 type="text"
                 // placeholder="brand"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Discount (%)</Form.Label>
+              <Form.Control
+                name="discount"
+                value={values?.discount}
+                onChange={handleChange}
+                type="number"
               />
             </Form.Group>
           </Col>
