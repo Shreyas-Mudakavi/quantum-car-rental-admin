@@ -38,7 +38,7 @@ export default function Dashboard() {
   });
   const { state } = useContext(Store);
   const { token } = state;
-  const [time, setTime] = useState("weekly");
+  const [time, setTime] = useState("all");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +50,7 @@ export default function Dashboard() {
             headers: { Authorization: token },
           }
         );
+
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
